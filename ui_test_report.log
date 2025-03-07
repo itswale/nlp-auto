@@ -85,3 +85,11 @@
 2025-03-07 12:55:38,659 - INFO - Step 1 - Completed visit - Status: passed, Logs: ['Retry 1/2 due to timeout', 'Visited https://www.linkedin.com']
 2025-03-07 12:55:49,193 - INFO - Step 1 - Executing visit on https://www.google.com in suite JJJ
 2025-03-07 12:55:53,140 - INFO - Step 1 - Completed visit - Status: passed, Logs: ['Visited https://www.google.com']
+2025-03-07 12:59:03,179 - DEBUG - Using selector: KqueueSelector
+2025-03-07 13:10:32,401 - DEBUG - Using selector: KqueueSelector
+2025-03-07 13:11:51,781 - INFO - Step 1 - Executing visit on https://www.linkedin.com in suite JJJ
+2025-03-07 13:12:26,207 - INFO - Step 1 - Completed visit - Status: passed, Logs: ['Retry 1/2 due to timeout', 'Visited https://www.linkedin.com']
+2025-03-07 13:13:13,986 - DEBUG - Using selector: KqueueSelector
+2025-03-07 13:13:33,926 - INFO - Step 1 - Executing visit on https://www.google.com in suite HH
+2025-03-07 13:13:37,907 - INFO - Step 1 - Completed visit - Status: passed, Logs: ['Visited https://www.google.com']
+2025-03-07 13:16:19,763 - DEBUG - Using selector: KqueueSelector

@@ -1,8 +1,8 @@
-# v10.4.10 - Fixed headless mode handling for Render
+# v10.5.0 - Added footer disclaimer and tooltips
 # Changes:
-# 1. Moved headless check to render method for immediate feedback
-# 2. Ensured IS_CLOUD is True for Render environment
-# 3. Kept previous fixes intact
+# 1. Added footer with Render free tier disclaimer and PayPal donation link
+# 2. Added tooltips to UI elements for better usability
+# 3. Kept headless mode fix for Render from v10.4.10
 
 import streamlit as st
 import playwright.async_api
@@ -392,19 +392,19 @@ class UIManager:
         st.title("NLP UI Automation")
 
         with st.sidebar:
-            st.header("Guide & Controls")
+            st.header("Guide & Controls", help="Settings to customize how tests run.")
             st.markdown("""
                 ### Quick Guide
                 - **Simplified Mode**: Quick templates for common tasks.
                 - **Advanced Mode**: Full control with all Playwright actions.
                 - **Headless Mode**: Required for cloud; enable for local testing without UI.
             """)
-            mode = st.radio("Mode", ["Simplified", "Advanced"], index=1)
-            enable_screenshots = st.checkbox("Enable Screenshots", value=True)
-            headless = st.checkbox("Run Headless", value=True)
-            retries = st.number_input("Failure Retries", min_value=0, max_value=5, value=2)
+            mode = st.radio("Mode", ["Simplified", "Advanced"], index=1, help="Choose Simplified for easy templates or Advanced for custom actions.")
+            enable_screenshots = st.checkbox("Enable Screenshots", value=True, help="Capture screenshots of successful test steps.")
+            headless = st.checkbox("Run Headless", value=True, help="Run tests without showing the browser (required on Render).")
+            retries = st.number_input("Failure Retries", min_value=0, max_value=5, value=2, help="Number of times to retry a failed step.")
             st.session_state["headless"] = headless
-            if st.button("Clear Test Flow"):
+            if st.button("Clear Test Flow", help="Reset all test suites and results."):
                 if "running_suites" in st.session_state and st.session_state.running_suites:
                     self.run_async_task(self.executor._cleanup_all_browsers(st.session_state.get("test_suites", [])))
                 st.session_state.test_suites = []
@@ -420,16 +420,16 @@ class UIManager:
             if "test_suites" not in st.session_state:
                 st.session_state.test_suites = []
 
-            suite_name = st.text_input("Suite Name", key="suite_name")
-            url = st.text_input("Initial Website URL", "https://www.google.com", key="url_input")
+            suite_name = st.text_input("Suite Name", key="suite_name", help="Give your test suite a unique name.")
+            url = st.text_input("Initial Website URL", "https://www.google.com", key="url_input", help="The starting URL for your tests.")
 
             if mode == "Simplified":
                 with st.form(key="simple_form"):
-                    template = st.selectbox("Select Template", ["Search and Submit", "Click Link", "Fill Form"])
-                    description = st.text_input("Description")
+                    template = st.selectbox("Select Template", ["Search and Submit", "Click Link", "Fill Form"], help="Pick a pre-built test pattern.")
+                    description = st.text_input("Description", help="Describe what this step does (e.g., 'Search for jobs').")
                     if template == "Search and Submit":
-                        search_term = st.text_input("Search Term")
-                        submit = st.form_submit_button("Add Template")
+                        search_term = st.text_input("Search Term", help="What to type into the search field.")
+                        submit = st.form_submit_button("Add Template", help="Add this step to your test suite.")
                         if submit and suite_name and description and search_term:
                             suite = TestSuite(suite_name, url, [TestCase("Fill", description, search_term, press_enter=True)])
                             st.session_state.test_suites.append(suite)
@@ -439,13 +439,13 @@ class UIManager:
 
             elif mode == "Advanced":
                 with st.form(key="advanced_form"):
-                    action = st.selectbox("Action", ["Visit", "Click", "Fill", "Enter", "Hover", "Check", "Uncheck", "Select", "Wait", "See"])
-                    description = st.text_input("Description")
-                    value = st.text_input("Value")
-                    press_enter = st.checkbox("Press Enter")
-                    manual_selector = st.text_input("Manual Selector (optional)")
-                    depends_on = st.number_input("Depends On Step (0 for none)", min_value=0, value=0)
-                    submit = st.form_submit_button("Add Test Case")
+                    action = st.selectbox("Action", ["Visit", "Click", "Fill", "Enter", "Hover", "Check", "Uncheck", "Select", "Wait", "See"], help="Choose what to do on the page.")
+                    description = st.text_input("Description", help="Explain this step (e.g., 'Click login button').")
+                    value = st.text_input("Value", help="Data for the action (e.g., 'user@example.com' for Fill).")
+                    press_enter = st.checkbox("Press Enter", help="Press Enter after filling a field.")
+                    manual_selector = st.text_input("Manual Selector (optional)", help="Custom CSS selector (e.g., '#login-button').")
+                    depends_on = st.number_input("Depends On Step (0 for none)", min_value=0, value=0, help="Step number this depends on (0 if independent).")
+                    submit = st.form_submit_button("Add Test Case", help="Add this step to your test suite.")
                     if submit:
                         if not suite_name or not description:
                             st.error("Suite Name and Description required")
@@ -487,16 +487,15 @@ class UIManager:
                                 st.write(step_display)
                             with col2:
                                 if step_idx > 0 or len(effective_cases) > 1:
-                                    if st.button("X", key=f"delete_{suite_idx}_{step_idx}"):
+                                    if st.button("X", key=f"delete_{suite_idx}_{step_idx}", help="Delete this step."):
                                         if step_idx == 0 and len(suite.test_cases) > 0:
                                             suite.test_cases.pop(0)
                                         elif step_idx > 0:
                                             suite.test_cases.pop(step_idx - 1)
                                         st.rerun()
 
-                if st.button("Run All Test Suites"):
+                if st.button("Run All Test Suites", help="Start running all your test suites."):
                     with st.spinner("Running tests..."):
-                        # Check headless mode here before running async task
                         headless = st.session_state.get("headless", True)
                         if IS_CLOUD and not headless:
                             st.warning("Oops! This app needs to run in headless mode on Render. Please check the 'Run Headless' box in the sidebar and try again.")
@@ -514,7 +513,7 @@ class UIManager:
                                 st.info("Tests are running... Please wait.")
 
         with tab2:
-            st.subheader("Detailed Test Results")
+            st.subheader("Detailed Test Results", help="See the outcome of each test step.")
             if self.executor.results:
                 df = pd.DataFrame(self.executor.results)
                 df.index = df.index + 1
@@ -529,7 +528,7 @@ class UIManager:
                 st.info("No tests run yet.")
 
         with tab3:
-            st.subheader("Test Analytics")
+            st.subheader("Test Analytics", help="Summary stats of your test runs.")
             if self.executor.results:
                 df = pd.DataFrame(self.executor.results)
                 total_time = df["execution_time"].sum()
@@ -548,6 +547,15 @@ class UIManager:
                 st.metric("Average Step Execution Time", f"{avg_time:.2f} seconds")
             else:
                 st.info("No tests run yet.")
+
+        # Footer Disclaimer with PayPal Donation Link
+        st.markdown("""
+            <hr style='margin-top: 2em;'>
+            <div style='text-align: center; font-size: 0.9em; color: #666;'>
+                <p><strong>Disclaimer:</strong> This app runs on Render's tier, which may cause slower performance due to limited resources. For a faster experience, consider supporting me!</p>
+                <p><a href='https://www.paypal.com/donate?business=olawaleakn@gmail.com&item_name=Support+NLP+UI+Automation' target='_blank'>Buy Me a Coffee (PayPal)</a></p>
+            </div>
+        """, unsafe_allow_html=True)
 
 def main():
     """Synchronous entry point for Streamlit."""
