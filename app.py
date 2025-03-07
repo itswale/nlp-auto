@@ -1,8 +1,7 @@
-# v10.4.8 - Added Playwright installation success message
+# v10.4.9 - Improved headless mode message
 # Changes:
-# 1. Updated ensure_playwright_browsers() to display success message
-# 2. Removed redundant spaCy loading block
-# 3. Kept previous fixes intact
+# 1. Added user-friendly headless mode warning in run_tests
+# 2. Kept previous fixes intact
 
 import streamlit as st
 import playwright.async_api
@@ -286,6 +285,7 @@ class TestExecutor:
 
     async def run_suite(self, suite: TestSuite, enable_screenshots=True, start_index=0, retries=2):
         headless = st.session_state.get("headless", True)
+        # Optional: This check is now redundant since run_tests handles it; you can remove it
         if IS_CLOUD and not headless:
             st.error("Non-headless mode is not supported in this cloud environment. Please enable 'Run Headless' in the sidebar.")
             return False
@@ -328,6 +328,12 @@ class TestExecutor:
                 await self._cleanup_all_browsers(suites)
                 st.session_state.running_suites = False
                 st.rerun()
+            return False
+
+        # Check headless mode before proceeding
+        headless = st.session_state.get("headless", True)
+        if IS_CLOUD and not headless:
+            st.warning("Oops! This app needs to run in headless mode on the cloud. Please check the 'Run Headless' box in the sidebar and try again.")
             return False
 
         st.session_state.running_suites = True
