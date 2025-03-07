@@ -23,3 +23,14 @@
 2025-03-07 10:05:48,056 - DEBUG - platform is darwin
 2025-03-07 10:05:48,091 - DEBUG - CACHEDIR=/Users/mrbbt/.matplotlib
 2025-03-07 10:05:48,093 - DEBUG - Using fontManager instance from /Users/mrbbt/.matplotlib/fontlist-v390.json
+2025-03-07 10:17:36,569 - DEBUG - Using selector: KqueueSelector
+2025-03-07 10:17:50,259 - INFO - Step 1 - Executing visit on https://www.fb.com in suite JJS
+2025-03-07 10:17:52,094 - INFO - Step 1 - Completed visit - Status: passed, Logs: ['Visited https://www.fb.com']
+2025-03-07 10:17:52,125 - DEBUG - STREAM b'IHDR' 16 13
+2025-03-07 10:17:52,126 - DEBUG - STREAM b'sRGB' 41 1
+2025-03-07 10:17:52,126 - DEBUG - STREAM b'IDAT' 54 8192
+2025-03-07 10:17:52,126 - DEBUG - STREAM b'IHDR' 16 13
+2025-03-07 10:17:52,126 - DEBUG - STREAM b'sRGB' 41 1
+2025-03-07 10:17:52,126 - DEBUG - STREAM b'IDAT' 54 8192
+2025-03-07 10:18:26,328 - DEBUG - Using selector: KqueueSelector
+2025-03-07 10:18:35,907 - DEBUG - Using selector: KqueueSelector

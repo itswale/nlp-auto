@@ -17,6 +17,22 @@ from dataclasses import dataclass
 from typing import List, Dict, Optional
 import hashlib
 import base64
+import spacy
+import subprocess
+import sys
+
+# Function to ensure the spaCy model is installed
+def ensure_spacy_model(model_name="en_core_web_sm"):
+    try:
+        nlp = spacy.load(model_name)
+    except OSError:
+        st.info(f"Downloading spaCy model '{model_name}'...")
+        subprocess.run([sys.executable, "-m", "spacy", "download", model_name], check=True)
+        nlp = spacy.load(model_name)
+    return nlp
+
+# Load the model
+nlp = ensure_spacy_model("en_core_web_sm")
 
 # Load NLP model
 try:
@@ -526,4 +542,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
