@@ -68,9 +68,9 @@ The app is deployed on Render using a Dockerfile for system dependencies.
       Add CLOUD_ENV=true in Render’s dashboard under "Environment" for cloud-specific behavior.
       ```
 ## Usage
-   Build Test Flow: Use Simplified or Advanced mode to create test suites.
+   1. Build Test Flow: Use Simplified or Advanced mode to create test suites.
    Run Tests: Click "Run All Test Suites" to execute and view results/analytics.
-   Headless Mode: Enable in the sidebar (required for cloud).
+   2. Headless Mode: Enable in the sidebar (required for cloud).
    
 ## Files
    app.py: Main application code.
