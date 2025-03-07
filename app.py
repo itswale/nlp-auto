@@ -422,7 +422,7 @@ class UIManager:
                 st.session_state.test_suites = []
 
             suite_name = st.text_input("Suite Name", key="suite_name")
-            url = st.text_input("Initial Website URL", "https://www.fb.com", key="url_input")
+            url = st.text_input("Initial Website URL", "https://www.linkedin.com", key="url_input")
 
             if mode == "Simplified":
                 with st.form(key="simple_form"):
