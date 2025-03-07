@@ -73,11 +73,11 @@ The app is deployed on Render using a Dockerfile for system dependencies.
    2. Headless Mode: Enable in the sidebar (required for cloud).
    
 ## Files
-   app.py: Main application code.
-   requirements.txt: Python dependencies.
-   Dockerfile: Docker setup for Render and local runs.
-   ui_test_report.log: Logs test execution (auto-generated).
-   screenshots/: Stores test screenshots (auto-generated).
+   1. app.py: Main application code.
+   2. requirements.txt: Python dependencies.
+   3. Dockerfile: Docker setup for Render and local runs.
+   4. ui_test_report.log: Logs test execution (auto-generated).
+   5. screenshots/: Stores test screenshots (auto-generated).
 
 ## Notes
    Playwright requires system libraries (e.g., libnss3). The Dockerfile ensures these are present on Render or locally.
