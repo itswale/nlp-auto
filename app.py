@@ -1,7 +1,8 @@
-# v10.4.9 - Improved headless mode message
+# v10.4.10 - Fixed headless mode handling for Render
 # Changes:
-# 1. Added user-friendly headless mode warning in run_tests
-# 2. Kept previous fixes intact
+# 1. Moved headless check to render method for immediate feedback
+# 2. Ensured IS_CLOUD is True for Render environment
+# 3. Kept previous fixes intact
 
 import streamlit as st
 import playwright.async_api
@@ -60,8 +61,8 @@ logging.basicConfig(filename='ui_test_report.log', level=logging.DEBUG,
                    format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Cloud environment detection
-IS_CLOUD = os.getenv("CLOUD_ENV", "false").lower() == "true"
+# Cloud environment detection (explicitly True for Render)
+IS_CLOUD = os.getenv("CLOUD_ENV", "true").lower() == "true"  # Default to True for Render
 
 @dataclass
 class TestCase:
@@ -285,11 +286,6 @@ class TestExecutor:
 
     async def run_suite(self, suite: TestSuite, enable_screenshots=True, start_index=0, retries=2):
         headless = st.session_state.get("headless", True)
-        # Optional: This check is now redundant since run_tests handles it; you can remove it
-        if IS_CLOUD and not headless:
-            st.error("Non-headless mode is not supported in this cloud environment. Please enable 'Run Headless' in the sidebar.")
-            return False
-
         p = await async_playwright().start()
         browser = await p.chromium.launch(headless=headless)
         context = await browser.new_context(viewport={"width": 1280, "height": 720})
@@ -328,12 +324,6 @@ class TestExecutor:
                 await self._cleanup_all_browsers(suites)
                 st.session_state.running_suites = False
                 st.rerun()
-            return False
-
-        # Check headless mode before proceeding
-        headless = st.session_state.get("headless", True)
-        if IS_CLOUD and not headless:
-            st.warning("Oops! This app needs to run in headless mode on the cloud. Please check the 'Run Headless' box in the sidebar and try again.")
             return False
 
         st.session_state.running_suites = True
@@ -506,17 +496,22 @@ class UIManager:
 
                 if st.button("Run All Test Suites"):
                     with st.spinner("Running tests..."):
-                        task = self.run_async_task(
-                            self.run_tests_async(st.session_state.test_suites, enable_screenshots=enable_screenshots, retries=retries)
-                        )
-                        if task.done():
-                            completed = task.result()
-                            if completed:
-                                st.success("All tests completed! Switch tab to view results")
-                            else:
-                                st.warning("Some tests failed or were interrupted. Switch tab to view results")
+                        # Check headless mode here before running async task
+                        headless = st.session_state.get("headless", True)
+                        if IS_CLOUD and not headless:
+                            st.warning("Oops! This app needs to run in headless mode on Render. Please check the 'Run Headless' box in the sidebar and try again.")
                         else:
-                            st.info("Tests are running... Please wait.")
+                            task = self.run_async_task(
+                                self.run_tests_async(st.session_state.test_suites, enable_screenshots=enable_screenshots, retries=retries)
+                            )
+                            if task.done():
+                                completed = task.result()
+                                if completed:
+                                    st.success("All tests completed! Switch tab to view results")
+                                else:
+                                    st.warning("Some tests failed or were interrupted. Switch tab to view results")
+                            else:
+                                st.info("Tests are running... Please wait.")
 
         with tab2:
             st.subheader("Detailed Test Results")

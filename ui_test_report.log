@@ -78,3 +78,10 @@
 2025-03-07 12:34:07,980 - DEBUG - STREAM b'IDAT' 41 8192
 2025-03-07 12:34:07,981 - DEBUG - STREAM b'IHDR' 16 13
 2025-03-07 12:34:07,981 - DEBUG - STREAM b'IDAT' 41 8192
+2025-03-07 12:47:25,135 - DEBUG - Using selector: KqueueSelector
+2025-03-07 12:53:56,436 - DEBUG - Using selector: KqueueSelector
+2025-03-07 12:55:04,457 - INFO - Step 1 - Executing visit on https://www.linkedin.com in suite lll
+2025-03-07 12:55:33,278 - DEBUG - Using selector: KqueueSelector
+2025-03-07 12:55:38,659 - INFO - Step 1 - Completed visit - Status: passed, Logs: ['Retry 1/2 due to timeout', 'Visited https://www.linkedin.com']
+2025-03-07 12:55:49,193 - INFO - Step 1 - Executing visit on https://www.google.com in suite JJJ
+2025-03-07 12:55:53,140 - INFO - Step 1 - Completed visit - Status: passed, Logs: ['Visited https://www.google.com']
