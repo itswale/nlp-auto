@@ -22,6 +22,9 @@ import hashlib
 import base64
 import spacy
 
+# Page Title
+st.set_page_config(page_title="NLP UI Automation")
+
 # Function to ensure the spaCy model is installed
 def ensure_spacy_model(model_name="en_core_web_sm"):
     try:
