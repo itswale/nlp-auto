@@ -34,3 +34,21 @@
 2025-03-07 10:17:52,126 - DEBUG - STREAM b'IDAT' 54 8192
 2025-03-07 10:18:26,328 - DEBUG - Using selector: KqueueSelector
 2025-03-07 10:18:35,907 - DEBUG - Using selector: KqueueSelector
+2025-03-07 10:37:52,026 - DEBUG - Using selector: KqueueSelector
+2025-03-07 10:38:10,818 - INFO - Step 1 - Executing visit on https://www.fb.com in suite H
+2025-03-07 10:38:14,073 - INFO - Step 1 - Completed visit - Status: passed, Logs: ['Visited https://www.fb.com']
+2025-03-07 10:38:14,135 - DEBUG - STREAM b'IHDR' 16 13
+2025-03-07 10:38:14,136 - DEBUG - STREAM b'sRGB' 41 1
+2025-03-07 10:38:14,136 - DEBUG - STREAM b'IDAT' 54 8192
+2025-03-07 10:38:14,136 - DEBUG - STREAM b'IHDR' 16 13
+2025-03-07 10:38:14,136 - DEBUG - STREAM b'sRGB' 41 1
+2025-03-07 10:38:14,137 - DEBUG - STREAM b'IDAT' 54 8192
+2025-03-07 10:43:48,637 - DEBUG - Using selector: KqueueSelector
+2025-03-07 10:44:07,217 - INFO - Step 1 - Executing visit on https://www.fb.com in suite SS
+2025-03-07 10:44:10,384 - INFO - Step 1 - Completed visit - Status: passed, Logs: ['Visited https://www.fb.com']
+2025-03-07 10:44:10,428 - DEBUG - STREAM b'IHDR' 16 13
+2025-03-07 10:44:10,428 - DEBUG - STREAM b'sRGB' 41 1
+2025-03-07 10:44:10,428 - DEBUG - STREAM b'IDAT' 54 8192
+2025-03-07 10:44:10,429 - DEBUG - STREAM b'IHDR' 16 13
+2025-03-07 10:44:10,429 - DEBUG - STREAM b'sRGB' 41 1
+2025-03-07 10:44:10,429 - DEBUG - STREAM b'IDAT' 54 8192

@@ -1,7 +1,8 @@
-# v10.4.7 - Fixed NameError: name 'suite' is not defined
+# v10.4.8 - Added Playwright installation success message
 # Changes:
-# 1. Fixed variable name mismatch in _cleanup_session_state
-# 2. Kept previous asyncio fixes intact
+# 1. Updated ensure_playwright_browsers() to display success message
+# 2. Removed redundant spaCy loading block
+# 3. Kept previous fixes intact
 
 import streamlit as st
 import playwright.async_api
@@ -13,13 +14,13 @@ from datetime import datetime
 import logging
 import asyncio
 import time
+import subprocess
+import sys
 from dataclasses import dataclass
 from typing import List, Dict, Optional
 import hashlib
 import base64
 import spacy
-import subprocess
-import sys
 
 # Function to ensure the spaCy model is installed
 def ensure_spacy_model(model_name="en_core_web_sm"):
@@ -31,16 +32,26 @@ def ensure_spacy_model(model_name="en_core_web_sm"):
         nlp = spacy.load(model_name)
     return nlp
 
-# Load the model
-nlp = ensure_spacy_model("en_core_web_sm")
+# Function to ensure Playwright browsers are installed
+def ensure_playwright_browsers():
+    if "playwright_installed" not in st.session_state:
+        try:
+            with async_playwright() as p:
+                browser = asyncio.run(p.chromium.launch(headless=True))
+                browser.close()
+            st.success("Playwright has been installed. You can now build your test flow!")
+            st.session_state.playwright_installed = True
+        except Exception as e:
+            st.info("Installing Playwright browsers...")
+            subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
+            st.success("Playwright has been installed. You can now build your test flow!")
+            st.session_state.playwright_installed = True
 
-# Load NLP model
-try:
-    import spacy
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    st.error("Please run `python -m spacy download en_core_web_sm` to install the NLP model.")
-    st.stop()
+# Run Playwright check at startup
+ensure_playwright_browsers()
+
+# Load the spaCy model
+nlp = ensure_spacy_model("en_core_web_sm")
 
 # Set up logging
 logging.basicConfig(filename='ui_test_report.log', level=logging.DEBUG, 
@@ -298,12 +309,12 @@ class TestExecutor:
                 st.session_state[f"paused_index_{suite.name}"] = i
                 await context.close()
                 await browser.close()
-                self._cleanup_session_state(suite.name)  # Use suite.name consistently
+                self._cleanup_session_state(suite.name)
                 return False
         
         await context.close()
         await browser.close()
-        self._cleanup_session_state(suite.name)  # Use suite.name consistently
+        self._cleanup_session_state(suite.name)
         progress_container.empty()
         return True
 
@@ -345,7 +356,7 @@ class TestExecutor:
         for suite in suites:
             await self._cleanup_browser(suite.name)
 
-    def _cleanup_session_state(self, suite_name):  # Fixed parameter name to suite_name
+    def _cleanup_session_state(self, suite_name):
         for key in [f"browser_{suite_name}", f"context_{suite_name}", f"page_{suite_name}"]:
             st.session_state.pop(key, None)
 
